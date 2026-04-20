@@ -9,6 +9,7 @@ import 'screens/trends_screen.dart';
 import 'screens/report_screen.dart';
 import 'screens/about_screen.dart';
 import 'screens/login_screen.dart';
+import 'screens/splash_screen.dart';
 import 'services/app_theme.dart';
 
 void main() async {
@@ -56,6 +57,7 @@ class AuthGate extends StatefulWidget {
 }
 
 class _AuthGateState extends State<AuthGate> {
+  bool _showSplash = true;
   bool _checking = true;
   bool _isLoggedIn = false;
 
@@ -76,6 +78,10 @@ class _AuthGateState extends State<AuthGate> {
     }
   }
 
+  void _onSplashFinished() {
+    if (mounted) setState(() => _showSplash = false);
+  }
+
   void _onLoginSuccess() {
     setState(() => _isLoggedIn = true);
   }
@@ -90,6 +96,11 @@ class _AuthGateState extends State<AuthGate> {
 
   @override
   Widget build(BuildContext context) {
+    // Show splash screen first
+    if (_showSplash) {
+      return SplashScreen(onFinished: _onSplashFinished);
+    }
+
     if (_checking) {
       return Scaffold(
         body: Center(
