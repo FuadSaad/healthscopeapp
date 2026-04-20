@@ -102,16 +102,17 @@ class SymptomPredictor {
   ];
 
   /// Predict diseases from a list of symptom IDs.
-  /// Uses weighted scoring algorithm (same as website) for consistent confidence values.
+  /// Uses weighted scoring algorithm with realistic confidence scaling.
   static List<Map<String, dynamic>> predict(List<String> selectedSymptoms) {
     if (selectedSymptoms.isEmpty) return [];
 
     List<Map<String, dynamic>> results = [];
 
     for (var disease in diseases) {
-      double score = (disease['prior'] as num).toDouble();
+      double score = 0;
       int matchedCount = 0;
       final symptomWeights = disease['symptoms'] as Map<String, dynamic>;
+      final totalDiseaseSymptoms = symptomWeights.length;
 
       for (var symptom in selectedSymptoms) {
         if (symptomWeights.containsKey(symptom)) {
@@ -122,9 +123,19 @@ class SymptomPredictor {
 
       if (matchedCount == 0) continue;
 
-      // Same formula as the website: score / (symptoms.length + 1) * 100
-      double confidence = score / (selectedSymptoms.length + 1) * 100;
-      int confidencePercent = min(99, confidence.round());
+      // Calculate max possible score for this disease
+      double maxScore = 0;
+      for (var w in symptomWeights.values) {
+        maxScore += (w as num).toDouble();
+      }
+
+      // Confidence = (matched score / max possible) * coverage factor * damping
+      double coverage = matchedCount / totalDiseaseSymptoms;
+      double rawConfidence = (score / maxScore) * coverage * 100;
+      
+      // Apply damping to keep values realistic (30-75% range typically)
+      double confidence = rawConfidence * 0.85;
+      int confidencePercent = min(78, max(12, confidence.round()));
 
       // Filter out very low matches
       if (confidencePercent < 15) continue;
