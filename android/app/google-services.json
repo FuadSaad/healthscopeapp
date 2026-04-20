@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "865836293694",
+    "project_id": "healthscope-ee801",
+    "storage_bucket": "healthscope-ee801.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:865836293694:android:90c5c8d4c00f32613ebb6f",
+        "android_client_info": {
+          "package_name": "com.example.healthscopeapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhCRbPRwklv71kpx5W7ccCrZzntCpu4CE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
